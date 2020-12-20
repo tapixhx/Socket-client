@@ -10,10 +10,21 @@ import { SocketioService } from './services/socketio.service';
 export class AppComponent implements OnInit {
   title = 'client';
 
-  constructor(private socketService: SocketioService) {}
+  user:String;
+  room:String;
+  messageArray:Array<{user:String, message:String}> = [];
+
+  constructor(private socketService: SocketioService) {
+    this.socketService.newUserJoined()
+      .subscribe(data => this.messageArray.push(data));
+  }
 
   ngOnInit() {
     this.socketService.setupSocketConnection();
+  }
+
+  join() {
+    this.socketService.joinRoom({user:this.user, room:this.room});
   }
 
 }
